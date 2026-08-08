@@ -1,0 +1,30 @@
+{
+  "name": "palet-app",
+  "version": "1.0.0",
+  "description": "Official starter application skeleton for Palet Framework.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "tailwindcss -i ./resources/css/app.css -o ./public/css/app.css --minify",
+    "dev": "tailwindcss -i ./resources/css/app.css -o ./public/css/app.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Omasat/palet-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Omasat/palet-app/issues"
+  },
+  "homepage": "https://github.com/Omasat/palet-app#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}
