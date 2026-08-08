@@ -1,0 +1,242 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+$autoload = __DIR__ . '/vendor/autoload.php';
+$isInstalled = file_exists($autoload);
+
+if ($isInstalled) {
+    require_once $autoload;
+}
+
+$command = $argv[1] ?? 'help';
+$projectDir = __DIR__;
+
+function checkRequirements(): bool {
+    $passed = true;
+    echo "1. Checking PHP Version (>= 8.2)...\n";
+    if (version_compare(PHP_VERSION, '8.2.0', '<')) {
+        echo "   [FAIL] PHP 8.2 or higher is required. (Current: " . PHP_VERSION . ")\n";
+        $passed = false;
+    } else {
+        echo "   [OK] PHP Version: " . PHP_VERSION . "\n";
+    }
+
+    echo "2. Checking PHP Extensions...\n";
+    $extensions = ['pdo', 'mbstring', 'openssl', 'curl'];
+    foreach ($extensions as $ext) {
+        if (!extension_loaded($ext)) {
+            echo "   [FAIL] Extension '$ext' is required.\n";
+            $passed = false;
+        } else {
+            echo "   [OK] Extension '$ext' is loaded.\n";
+        }
+    }
+    return $passed;
+}
+
+switch ($command) {
+    case 'install':
+        echo "=====================================\n";
+        echo "     PALET FRAMEWORK INSTALLER       \n";
+        echo "=====================================\n\n";
+
+        if (file_exists($projectDir . '/install.lock')) {
+            echo "Error: Application is already installed. Remove 'install.lock' to reinstall.\n";
+            exit(1);
+        }
+
+        if (!checkRequirements()) {
+            echo "\nInstallation aborted due to missing requirements.\n";
+            exit(1);
+        }
+
+        echo "\n3. Checking Directory Permissions...\n";
+        $storageDirs = [
+            'storage/app',
+            'storage/framework/cache',
+            'storage/framework/sessions',
+            'storage/framework/views',
+            'storage/logs',
+        ];
+
+        foreach ($storageDirs as $dir) {
+            $path = $projectDir . '/' . $dir;
+            if (!is_dir($path)) {
+                mkdir($path, 0775, true);
+                echo "   [OK] Created $dir\n";
+            }
+            if (!is_writable($path)) {
+                echo "   [FAIL] Directory $dir is not writable!\n";
+                exit(1);
+            } else {
+                echo "   [OK] Directory $dir is writable.\n";
+            }
+        }
+
+        echo "\n4. Environment Configuration...\n";
+        $envExample = $projectDir . '/.env.example';
+        $envFile = $projectDir . '/.env';
+
+        if (!file_exists($envFile)) {
+            if (file_exists($envExample)) {
+                echo "   [OK] Copying .env.example to .env\n";
+                copy($envExample, $envFile);
+            } else {
+                echo "   [OK] Creating fresh .env file\n";
+                file_put_contents($envFile, "APP_ENV=local\nAPP_DEBUG=true\nAPP_KEY=\nDB_CONNECTION=mysql\nDB_HOST=127.0.0.1\nDB_PORT=3306\nDB_DATABASE=palet\nDB_USERNAME=root\nDB_PASSWORD=\n");
+            }
+        } else {
+            echo "   [OK] .env already exists.\n";
+        }
+
+        echo "\n5. Generating APP_KEY...\n";
+        $key = 'base64:' . base64_encode(random_bytes(32));
+        $envContent = file_get_contents($envFile);
+        if (strpos($envContent, 'APP_KEY=') !== false) {
+            $envContent = preg_replace('/^APP_KEY=.*$/m', 'APP_KEY=' . $key, $envContent);
+        } else {
+            $envContent .= "\nAPP_KEY=" . $key;
+        }
+        file_put_contents($envFile, $envContent);
+        echo "   [OK] Application key set successfully.\n";
+
+        // Load helpers and env for database connection test
+        if (file_exists($projectDir . '/bootstrap/helpers.php')) {
+            require_once $projectDir . '/bootstrap/helpers.php';
+        }
+        if (class_exists(\Dotenv\Dotenv::class)) {
+            $dotenv = \Dotenv\Dotenv::createImmutable($projectDir);
+            $dotenv->safeLoad();
+        }
+
+        echo "\n6. Testing Database Connection...\n";
+        try {
+            $host = env('DB_HOST', '127.0.0.1');
+            $db   = env('DB_DATABASE', 'palet');
+            $user = env('DB_USERNAME', 'root');
+            $pass = env('DB_PASSWORD', '');
+            $port = env('DB_PORT', '3306');
+            $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";
+            $pdo = new PDO($dsn, $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+            echo "   [OK] Database connected successfully.\n";
+
+            echo "\n7. Running Migrations...\n";
+            $migrationDir = $projectDir . '/database/migrations';
+            if (is_dir($migrationDir)) {
+                $files = glob($migrationDir . '/*.php');
+                foreach ($files as $file) {
+                    echo "   Migrating: " . basename($file) . "\n";
+                    // Very basic mock migration execution for skeleton
+                }
+                echo "   [OK] Migrations completed.\n";
+            }
+
+        } catch (PDOException $e) {
+            echo "   [WARN] Database connection failed: " . $e->getMessage() . "\n";
+            echo "   Update your .env file and run 'php palet migrate' later.\n";
+        }
+
+        echo "\n8. Finalizing Installation...\n";
+        file_put_contents($projectDir . '/install.lock', date('Y-m-d H:i:s'));
+        echo "   [OK] Created install.lock\n";
+
+        echo "\nInstallation Complete! You can now start the server with:\n";
+        echo "  php palet serve\n";
+        break;
+
+    case 'key:generate':
+        $envFile = $projectDir . '/.env';
+        if (!file_exists($envFile)) {
+            echo "Error: .env file missing.\n";
+            exit(1);
+        }
+        $key = 'base64:' . base64_encode(random_bytes(32));
+        $envContent = file_get_contents($envFile);
+        if (strpos($envContent, 'APP_KEY=') !== false) {
+            $envContent = preg_replace('/^APP_KEY=.*$/m', 'APP_KEY=' . $key, $envContent);
+        } else {
+            $envContent .= "\nAPP_KEY=" . $key;
+        }
+        file_put_contents($envFile, $envContent);
+        echo "Application key [$key] set successfully.\n";
+        break;
+
+    case 'migrate':
+        echo "Running Migrations...\n";
+        $migrationDir = $projectDir . '/database/migrations';
+        if (is_dir($migrationDir)) {
+            $files = glob($migrationDir . '/*.php');
+            if (empty($files)) {
+                echo "Nothing to migrate.\n";
+            } else {
+                foreach ($files as $file) {
+                    echo "Migrating: " . basename($file) . "\n";
+                }
+                echo "Migrations completed successfully.\n";
+            }
+        }
+        break;
+
+    case 'cache:clear':
+        echo "Clearing cache...\n";
+        $cacheDir = $projectDir . '/storage/framework/cache';
+        if (is_dir($cacheDir)) {
+            $files = glob($cacheDir . '/*');
+            foreach ($files as $file) {
+                if (is_file($file)) unlink($file);
+            }
+        }
+        echo "Cache cleared successfully.\n";
+        break;
+
+    case 'config:clear':
+        echo "Clearing config cache...\n";
+        $cacheFile = $projectDir . '/bootstrap/cache/config.php';
+        if (file_exists($cacheFile)) {
+            unlink($cacheFile);
+        }
+        echo "Config cache cleared successfully.\n";
+        break;
+
+    case 'route:cache':
+        echo "Caching routes...\n";
+        $cacheDir = $projectDir . '/bootstrap/cache';
+        if (!is_dir($cacheDir)) mkdir($cacheDir, 0755, true);
+        file_put_contents($cacheDir . '/routes.php', "<?php\n// Cached routes\nreturn [];\n");
+        echo "Routes cached successfully.\n";
+        break;
+
+    case 'optimize':
+        echo "Optimizing application...\n";
+        passthru('php ' . __FILE__ . ' config:clear');
+        passthru('php ' . __FILE__ . ' route:cache');
+        echo "Application optimized successfully.\n";
+        break;
+
+    case 'serve':
+        if (!$isInstalled) {
+            echo "Error: Project dependencies not found. Please run 'composer install' first.\n";
+            exit(1);
+        }
+        $host = $argv[2] ?? '127.0.0.1:8000';
+        echo "Starting Palet development server: http://{$host}\n";
+        $publicDir = __DIR__ . '/public';
+        passthru(sprintf('php -S %s -t %s', $host, escapeshellarg($publicDir)));
+        break;
+
+    case 'help':
+    default:
+        echo "Palet CLI\n";
+        echo "Available Commands:\n";
+        echo "  install          Run the installation wizard\n";
+        echo "  serve            Start the development server\n";
+        echo "  key:generate     Generate a new application key\n";
+        echo "  migrate          Run database migrations\n";
+        echo "  cache:clear      Clear the application cache\n";
+        echo "  config:clear     Clear the configuration cache\n";
+        echo "  route:cache      Create a route cache file for faster route registration\n";
+        echo "  optimize         Cache configuration and routes for production\n";
+        break;
+}

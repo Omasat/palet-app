@@ -1,0 +1,51 @@
+{
+    "name": "paletphp/skeleton",
+    "description": "The Palet Framework Application Skeleton",
+    "type": "project",
+    "require": {
+        "php": ">=8.3",
+        "paletphp/framework": "1.0.0-RC1"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../palet-framework",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "_comment": "Canlı ortama (Release) çıkılırken veya ayrı repo kullanırken yukarıdaki path yerine aşağıdaki VCS yapısı aktifleştirilmelidir.",
+            "type": "vcs",
+            "url": "https://github.com/KULLANICI_ADINIZ/palet-framework"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Palet\\Framework\\Foundation\\ComposerScripts::postAutoloadDump"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php palet install"
+        ]
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

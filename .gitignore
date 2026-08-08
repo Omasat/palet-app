@@ -1,0 +1,16 @@
+# Ignore vendor and environment
+/vendor/
+/.env
+/.env.*
+
+# Ignore runtime and build artifacts
+/bootstrap/cache/
+/storage/
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE files
+/.idea/
+/.vscode/
