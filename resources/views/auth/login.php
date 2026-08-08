@@ -30,7 +30,7 @@
             <div>
                 <label for="email" class="block text-sm font-medium text-slate-300 mb-1.5">E-posta Adresi</label>
                 <div class="relative">
-                    <input type="email" id="email" name="email" required placeholder="admin@palet.test"
+                    <input type="email" id="email" name="email" required value="admin@palet.test" placeholder="admin@palet.test"
                         class="w-full bg-slate-900/50 border border-slate-700/60 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
                 </div>
             </div>
@@ -38,7 +38,7 @@
             <div>
                 <label for="password" class="block text-sm font-medium text-slate-300 mb-1.5">Şifre</label>
                 <div class="relative">
-                    <input type="password" id="password" name="password" required placeholder="••••••••"
+                    <input type="password" id="password" name="password" required value="password" placeholder="••••••••"
                         class="w-full bg-slate-900/50 border border-slate-700/60 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors">
                 </div>
             </div>

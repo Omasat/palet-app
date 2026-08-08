@@ -38,9 +38,7 @@ class AuthController extends Controller
         }
 
         // Failed login
-        echo "Login failed. Credentials attempted:<br>";
-        var_dump($credentials);
-        echo "<br><a href='/login'>Try again</a>";
+        echo "Login failed. <a href='/login'>Try again</a>";
         exit;
     }
 
