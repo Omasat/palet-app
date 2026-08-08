@@ -49,13 +49,15 @@ class AuthController extends Controller
      */
     public function dashboard()
     {
-        if (auth()->guest()) {
+        // Require auth
+        if (!auth()->check()) {
             header('Location: /login');
             exit;
         }
 
-        $user = auth()->user();
-        return "Welcome to the Dashboard, " . htmlspecialchars($user->name) . "! <br><a href='/logout'>Logout</a>";
+        return view('dashboard', [
+            'user' => auth()->user()
+        ]);
     }
 
     /**
