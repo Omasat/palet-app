@@ -12,14 +12,6 @@
     },
     "repositories": [
         {
-            "type": "path",
-            "url": "../palet-framework",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "_comment": "Canlı ortama (Release) çıkılırken veya ayrı repo kullanırken yukarıdaki path yerine aşağıdaki VCS yapısı aktifleştirilmelidir.",
             "type": "vcs",
             "url": "https://github.com/Omasat/palet-framework"
         }
