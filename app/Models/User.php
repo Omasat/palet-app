@@ -9,6 +9,11 @@ use Palet\Framework\Database\Orm\Model\BaseModel;
 
 class User extends BaseModel implements AuthenticatableInterface
 {
+    public function getAuthIdentifierName(): string
+    {
+        return 'id';
+    }
+
     public function getAuthIdentifier(): mixed
     {
         return $this->id;
