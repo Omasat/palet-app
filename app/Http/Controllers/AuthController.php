@@ -23,9 +23,10 @@ class AuthController extends Controller
     {
         // CSRF verification should normally be here
 
+        $body = $request->getParsedBody() ?? [];
         $credentials = [
-            'email' => $request->input('email', ''),
-            'password' => $request->input('password', ''),
+            'email' => $body['email'] ?? '',
+            'password' => $body['password'] ?? '',
         ];
 
         // Attempt to login
