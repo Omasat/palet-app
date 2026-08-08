@@ -12,5 +12,6 @@ return [
     'providers' => [
         \App\Providers\AppServiceProvider::class,
         \App\Providers\RouteServiceProvider::class,
+        \Palet\Framework\Database\DatabaseServiceProvider::class,
     ],
 ];
