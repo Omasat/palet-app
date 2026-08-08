@@ -36,7 +36,7 @@ if (!function_exists('view')) {
     /**
      * Get the evaluated view contents for the given view.
      */
-    function view(string $view = null, array $data = [])
+    function view(?string $view = null, array $data = [])
     {
         $app = \Palet\Framework\Foundation\Application::getInstance();
         
