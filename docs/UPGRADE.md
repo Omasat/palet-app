@@ -1,11 +1,42 @@
-# Upgrade Guide
+# ?? Upgrade Guide
 
-When upgrading Palet App to a newer version, follow these general steps:
+This guide details the process of upgrading your Palet application to newer versions of the framework.
 
-1. **Backup**: Always backup your database and files, particularly the `.env` file and `storage/` directory.
-2. **Maintenance Mode**: (If implemented) Put the application into maintenance mode.
-3. **Pull Changes**: Download the latest release or run `git pull origin main`.
-4. **Update Dependencies**: Run `composer update --no-dev --optimize-autoloader`.
-5. **Run Migrations**: Run `php palet migrate` to apply any new database schema changes.
-6. **Clear Caches**: Run `php palet cache:clear` and `php palet optimize` to refresh all cached configurations and routes.
-7. **Review Changelog**: Check the `CHANGELOG.md` for any manual changes required in your `.env` or config files.
+Palet follows **Semantic Versioning** (`MAJOR.MINOR.PATCH`):
+- **Major versions** (`2.0.0`) may contain breaking changes and require manual code updates.
+- **Minor versions** (`1.1.0`) contain new features but are completely backwards compatible.
+- **Patch versions** (`1.0.1`) contain only bug fixes.
+
+---
+
+## Upgrading Patch and Minor Versions
+
+Because minor and patch versions are backwards compatible, you can upgrade them safely using Composer.
+
+To pull in the latest minor/patch updates for your current major version, run:
+
+```bash
+composer update omasat/palet-framework
+```
+
+After updating, it is recommended to clear your application cache:
+
+```bash
+php palet cache:clear
+```
+
+## Upgrading Major Versions
+
+*Currently, Palet is on version `1.x`. When version `2.x` is released, detailed step-by-step instructions for breaking changes will be provided here.*
+
+When upgrading to a new major release, you will typically need to:
+
+1. Update the version constraint in your `composer.json`:
+   ```json
+   "require": {
+       "omasat/palet-framework": "^2.0"
+   }
+   ```
+2. Run `composer update`.
+3. Follow the specific breaking change mitigation steps provided in the release notes.
+

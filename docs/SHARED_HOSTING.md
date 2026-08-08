@@ -1,22 +1,43 @@
-# Shared Hosting Guide
+# ??? Shared Hosting Deployment
 
-## Required directories
+Deploying a Palet application on a shared hosting environment (where you don't have full SSH access or cannot change the document root) requires a slightly different approach.
 
-- `public/` must be the only publicly accessible folder.
-- `storage/` should be writable and kept outside the web root.
-- `bootstrap/cache/` should be writable.
+Palet is designed to be highly secure, which means the core framework files should never be publicly accessible.
 
-## Deployment Steps
+---
 
-1. Upload the repository to the server.
-2. Set the web root to the `public/` folder.
-3. Copy `.env.example` to `.env` on the server.
-4. Ensure the following permissions are set:
-   - `storage/` writable
-   - `bootstrap/cache/` writable
-   - `public/` readable
+## The Secure Approach (Recommended)
 
-## Notes
+If your shared host gives you access to a directory *above* your `public_html` (or `www`), follow these steps:
 
-- If Composer is unavailable on the server, upload the pre-installed `vendor/` directory from a local machine.
-- Do not expose `bootstrap/`, `storage/`, or `vendor/` through the web server.
+1. **Upload the Application:** Upload your entire Palet project folder into the directory *above* `public_html`. (e.g., `/home/username/palet-app`).
+2. **Move the Public Folder:** Move all the contents of your `public/` folder into the `public_html` directory of your hosting provider.
+3. **Update Paths:** Open the `index.php` file that is now in your `public_html` folder and update the paths to point to the application folder.
+
+```php
+// public_html/index.php
+
+// Change this:
+require __DIR__ . '/../bootstrap/app.php';
+
+// To this:
+require __DIR__ . '/../palet-app/bootstrap/app.php';
+```
+
+4. **Permissions:** Ensure the `storage/` and `bootstrap/cache/` folders inside `/home/username/palet-app` have write permissions (755 or 775).
+
+## The .htaccess Approach (Not Recommended)
+
+If you have absolutely no choice and must upload the entire project *inside* the `public_html` folder, you must use an `.htaccess` file to protect your sensitive files and redirect traffic to the `public/` directory.
+
+Create an `.htaccess` file in your root directory (`public_html/.htaccess`) with the following rules:
+
+```apache
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+```
+
+> **Warning:** This method is highly discouraged because a misconfiguration in your Apache server could expose your `.env` file and database credentials to the entire internet!
+
