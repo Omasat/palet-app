@@ -2,6 +2,7 @@
     "name": "omasat/palet-skeleton",
     "description": "The Palet Framework Application Skeleton",
     "type": "project",
+    "license": "MIT",
     "require": {
         "php": ">=8.3",
         "omasat/palet-framework": "dev-main"
