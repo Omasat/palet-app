@@ -5,7 +5,7 @@
     "license": "MIT",
     "require": {
         "php": ">=8.3",
-        "omasat/palet-framework": "dev-main"
+        "omasat/palet-framework": "^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^10.5"
