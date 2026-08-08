@@ -227,9 +227,8 @@ switch ($command) {
         break;
 
     case 'help':
-    default:
         echo "Palet CLI\n";
-        echo "Available Commands:\n";
+        echo "Available Legacy Commands:\n";
         echo "  install          Run the installation wizard\n";
         echo "  serve            Start the development server\n";
         echo "  key:generate     Generate a new application key\n";
@@ -237,6 +236,37 @@ switch ($command) {
         echo "  cache:clear      Clear the application cache\n";
         echo "  config:clear     Clear the configuration cache\n";
         echo "  route:cache      Create a route cache file for faster route registration\n";
-        echo "  optimize         Cache configuration and routes for production\n";
+        echo "  optimize         Cache configuration and routes for production\n\n";
+        
+        echo "Framework Commands:\n";
+        // Fall through to default to show framework commands too
+    default:
+        if ($isInstalled && file_exists($projectDir . '/bootstrap/app.php')) {
+            $app = require_once $projectDir . '/bootstrap/app.php';
+            
+            // Register Console Kernel if not bound
+            if (!$app->has(\Palet\Framework\Contracts\Console\KernelInterface::class)) {
+                $app->singleton(
+                    \Palet\Framework\Contracts\Console\KernelInterface::class,
+                    \App\Console\Kernel::class
+                );
+            }
+            
+            $kernel = $app->make(\Palet\Framework\Contracts\Console\KernelInterface::class);
+            
+            // Boot the framework manually for console
+            if (method_exists($kernel, 'bootstrap')) {
+                $kernel->bootstrap();
+            }
+
+            $input = new \Palet\Framework\Console\Input\ArgvInput($argv);
+            $output = new \Palet\Framework\Console\Output\ConsoleOutput();
+            
+            $status = $kernel->handle($input, $output);
+            exit($status);
+        } else {
+            echo "Error: Framework not installed or bootstrap/app.php missing.\n";
+            exit(1);
+        }
         break;
 }

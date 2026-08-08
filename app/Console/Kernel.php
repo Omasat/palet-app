@@ -14,8 +14,17 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected array $commands = [
-        //
+        \Palet\Framework\Console\Commands\Generator\MakeControllerCommand::class,
     ];
+
+    public function __construct(\Palet\Framework\Console\Application $app)
+    {
+        parent::__construct($app);
+        
+        foreach ($this->commands as $commandClass) {
+            $this->app->add(new $commandClass());
+        }
+    }
 
     /**
      * Define the application's command schedule.
