@@ -4,11 +4,20 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-// use Palet\Framework\Auth\Authenticatable;
-// use Palet\Framework\Database\Eloquent\Model;
+use Palet\Framework\Contracts\Auth\AuthenticatableInterface;
+use Palet\Framework\Database\Orm\Model\BaseModel;
 
-class User // extends Model implements Authenticatable
+class User extends BaseModel implements AuthenticatableInterface
 {
+    public function getAuthIdentifier(): mixed
+    {
+        return $this->id;
+    }
+
+    public function getAuthPassword(): string
+    {
+        return $this->password;
+    }
     /**
      * The attributes that are mass assignable.
      *

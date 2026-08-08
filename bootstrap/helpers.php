@@ -49,3 +49,20 @@ if (!function_exists('view')) {
         return $factory->make($view, $data);
     }
 }
+
+if (!function_exists('auth')) {
+    /**
+     * Get the available auth instance.
+     */
+    function auth(?string $guard = null)
+    {
+        $app = \Palet\Framework\Foundation\Application::getInstance();
+        $auth = $app->make('auth');
+        
+        if (is_null($guard)) {
+            return $auth;
+        }
+        
+        return $auth->guard($guard);
+    }
+}
