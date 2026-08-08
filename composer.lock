@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c99341dfbc5b257745afe0785cbdbacc",
+    "content-hash": "3e61661f855abf3a964fc830cf1508b0",
     "packages": [
         {
-            "name": "paletphp/framework",
-            "version": "1.0.0-RC1",
+            "name": "omasat/palet-framework",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "../palet-framework",
-                "reference": "b84ce66ed684c4b9267a3c9393f9112116d20f6a"
+                "reference": "3475223ceda69024201e89d4c0e5d9ead66555ce"
             },
             "require": {
                 "php": ">=8.2",
@@ -484,7 +484,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "paletphp/framework": 5
+        "omasat/palet-framework": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
