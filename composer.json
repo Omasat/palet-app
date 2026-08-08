@@ -1,10 +1,10 @@
 {
-    "name": "paletphp/skeleton",
+    "name": "omasat/palet-skeleton",
     "description": "The Palet Framework Application Skeleton",
     "type": "project",
     "require": {
         "php": ">=8.3",
-        "paletphp/framework": "1.0.0-RC1"
+        "omasat/palet-framework": "dev-main"
     },
     "repositories": [
         {
@@ -17,7 +17,7 @@
         {
             "_comment": "Canlı ortama (Release) çıkılırken veya ayrı repo kullanırken yukarıdaki path yerine aşağıdaki VCS yapısı aktifleştirilmelidir.",
             "type": "vcs",
-            "url": "https://github.com/KULLANICI_ADINIZ/palet-framework"
+            "url": "https://github.com/Omasat/palet-framework"
         }
     ],
     "autoload": {
