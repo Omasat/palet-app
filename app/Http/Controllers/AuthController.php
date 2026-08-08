@@ -29,6 +29,19 @@ class AuthController extends Controller
             'password' => $body['password'] ?? '',
         ];
 
+        $provider = auth()->guard()->getProvider();
+        $user = $provider->retrieveByCredentials($credentials);
+        
+        echo "<h3>Debug Info:</h3>";
+        echo "<strong>Credentials received:</strong> "; var_dump($credentials);
+        echo "<br><strong>User found in DB:</strong> "; var_dump((bool)$user);
+        if ($user) {
+            echo "<br><strong>User Hash from DB:</strong> "; var_dump($user->getAuthPassword());
+            echo "<br><strong>Password Verify:</strong> "; var_dump(password_verify($credentials['password'], $user->getAuthPassword()));
+            echo "<br><strong>Validate Method:</strong> "; var_dump($provider->validateCredentials($user, $credentials));
+        }
+        exit;
+
         // Attempt to login
         if (auth()->attempt($credentials)) {
             // Usually, redirect to intended page
