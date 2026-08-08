@@ -19,5 +19,5 @@ $router->get('/hello/{name}', [HomeController::class, 'greet']);
 // Auth Routes
 $router->get('/login', [\App\Http\Controllers\AuthController::class, 'login']);
 $router->post('/login', [\App\Http\Controllers\AuthController::class, 'authenticate']);
-$router->get('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
+$router->post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
 $router->get('/dashboard', [\App\Http\Controllers\AuthController::class, 'dashboard']);
