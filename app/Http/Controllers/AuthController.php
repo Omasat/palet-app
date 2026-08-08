@@ -30,11 +30,11 @@ class AuthController extends Controller
         ];
 
         $provider = auth()->guard()->getProvider();
-        $user = $provider->retrieveByCredentials($credentials);
         
         echo "<h3>Debug Info:</h3>";
-        echo "<strong>Credentials received:</strong> "; var_dump($credentials);
-        echo "<br><strong>User found in DB:</strong> "; var_dump((bool)$user);
+        echo "<strong>Raw \$_POST:</strong> "; var_dump($_POST);
+        echo "<br><strong>getParsedBody():</strong> "; var_dump($request->getParsedBody());
+        exit;
         if ($user) {
             echo "<br><strong>User Hash from DB:</strong> "; var_dump($user->getAuthPassword());
             echo "<br><strong>Password Verify:</strong> "; var_dump(password_verify($credentials['password'], $user->getAuthPassword()));
