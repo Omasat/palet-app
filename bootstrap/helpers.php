@@ -31,3 +31,21 @@ if (!function_exists('env')) {
         return $value;
     }
 }
+
+if (!function_exists('view')) {
+    /**
+     * Get the evaluated view contents for the given view.
+     */
+    function view(string $view = null, array $data = [])
+    {
+        $app = \Palet\Framework\Foundation\Application::getInstance();
+        
+        $factory = $app->make(\Palet\Framework\Contracts\View\ViewFactoryInterface::class);
+
+        if (func_num_args() === 0) {
+            return $factory;
+        }
+
+        return $factory->make($view, $data);
+    }
+}

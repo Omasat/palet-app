@@ -13,13 +13,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $path = realpath(__DIR__ . '/../../../resources/views/welcome.php');
-
-        if ($path && file_exists($path)) {
-            return file_get_contents($path);
-        }
-
-        return '<h1>Palet Framework</h1><p>Welcome page not found.</p>';
+        return view('welcome', ['name' => 'Kullanıcı'])->render();
     }
 
     /**
